@@ -1,17 +1,19 @@
-import { useState } from 'react'
-import './App.css'
-import PostsList from  "./features/posts/PostsList.jsx"
+import { BrowserRouter as Router } from "react-router-dom";
+import './App.css';
+import AppRoutes from "./components/AppRoutes.jsx";
+import NavBar from "./components/NavBar.jsx";
 
 function App() {
 
   return (
-    <>
+    <Router>
         <div className="app">
             <h1>React on Rails Blog</h1>
             <p>Find this app in layout in client/src/App.jsx</p>
-            <PostsList />
+            <NavBar />
+            <AppRoutes />
         </div>
-    </>
+    </ Router>
   )
 }
 
