@@ -48,6 +48,8 @@ function PostsList(){
         <div>
             {posts.map((post) => (
                 <div key={post.id} className="post-container">
+                    <Link to={`posts/${post.id}/edit`}>Edit Post</Link>
+                    {" | "}
                     <Link to={`posts/${post.id}`}>
                         <h2>{post.title}</h2>
                     </Link>
