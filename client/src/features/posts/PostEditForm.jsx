@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {API_URL} from "../../constants.js";
 
 function PostEditForm() {
@@ -82,6 +82,8 @@ function PostEditForm() {
                     <button type="submit">Save</button>
                 </div>
             </form>
+            {" | "}
+            <Link to={`posts/${id}`}>Back to Post Details</Link>
         </div>
     );
 }
