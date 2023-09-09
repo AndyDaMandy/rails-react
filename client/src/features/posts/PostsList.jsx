@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { deletePost as deletePostService, fetchAllPosts } from "../../services/postService.js";
+import { deletePost, fetchAllPosts } from "../../services/postService.js";
 import {Link} from "react-router-dom";
 
 function PostsList(){
@@ -25,9 +25,9 @@ function PostsList(){
         loadPosts();
     }, []);
 
-    const deletePost = async (id) => {
+    const deletePostHandler = async (id) => {
         try {
-            await deletePostService(id);
+            await deletePost(id);
             setPosts(posts.filter((post) => post.id !== id));
         } catch (e) {
             console.log("Failed to delete this post", e);
@@ -44,7 +44,7 @@ function PostsList(){
                         <h2>{post.title}</h2>
                     </Link>
                     <div className="post-links">
-                        <button onClick={() => deletePost(post.id)}>Delete</button>
+                        <button onClick={() => deletePostHandler(post.id)}>Delete</button>
                     </div>
                 </div>
                 ))}
