@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {API_URL} from "../../constants.js";
+import { fetchPost, updatePost } from "../../services/postService.js";
 
 function PostEditForm() {
-    //if I had a guess we'll need an async similar to the new post
-    //the difference is that it will required headers and an input
+
     const [post, setPost] = useState(null);
     const { id } = useParams();
     const [, setLoading] = useState(true);
@@ -15,43 +14,30 @@ function PostEditForm() {
     useEffect(() => {
         const fetchCurrentPost = async () => {
             try {
-                const response = await fetch(`${API_URL}/${id}`);
-                if (response.ok) {
-                    const json = await response.json();
-                    setPost(json);
-                } else {
-                    throw response;
-                }
+             const json = await fetchPost(id);
+             setPost(json);
             } catch (e) {
-                console.log("An error occurred", e);
-            };
+                setError(e);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchCurrentPost();
     }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: post.title,
-                    body: post.body,
-                }),
-            });
-            if (response.ok){
-                const json = await response.json();
-                console.log("Success", json);
-                navigate(`/posts/${id}`);
-            } else {
-                throw response
-            }
-        } catch (e) {
-            console.log("An error occurred", e);
-        }
+       const updatedPost = {
+           title: post.title,
+           body: post.body
+       };
+
+       try {
+           const response = await updatePost(id, updatedPost);
+           navigate(`/posts/${response.id}`);
+       } catch(e) {
+           console.error("Failed to update post: ", e);
+       };
     }
     if (!post) return <h2>Loading...</h2>;
 
@@ -70,7 +56,7 @@ function PostEditForm() {
                     />
                 </div>
                 <div>
-                    <lable htmllFor="post-body">Body</lable>
+                    <label htmlFor="post-body">Body</label>
                     <br />
                     <textarea
                         id="post-body"

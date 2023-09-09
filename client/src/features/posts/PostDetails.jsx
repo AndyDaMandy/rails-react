@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import {API_URL} from "../../constants.js";
+import { deletePost, fetchPost } from "../../services/postService.js";
 
 function PostDetails() {
     const [post, setPost] = useState(null);
@@ -10,13 +10,8 @@ function PostDetails() {
     useEffect(() => {
         const fetchCurrentPost = async () => {
             try {
-                const response = await fetch(`${API_URL}/${id}`);
-                if (response.ok) {
-                    const json = await response.json();
-                    setPost(json);
-                } else {
-                    throw response;
-                }
+                const json = await fetchPost(id);
+                setPost(json);
             } catch (e) {
                 console.log("An error occurred", e);
             };
@@ -24,18 +19,12 @@ function PostDetails() {
         fetchCurrentPost();
     }, [id]);
 
-    const deletePost = async () => {
+    const deletePostHandler = async () => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: "DELETE",
-            });
-            if (response.ok) {
-                navigate("/");
-            } else {
-                throw response;
-            }
+            await deletePost(post.id);
+            navigate("/");
         } catch (e) {
-            console.error(e);
+            console.error("Failed to delete the post", e);
         }
     }
     //we return loading to prevent an error with the async if it hasn't found the post yet.
@@ -46,11 +35,11 @@ function PostDetails() {
         <div key={post.id}>
             <h2>{post.title}</h2>
             <p>{post.body}</p>
-            <Link to={`posts/${post.id}/edit`}>Edit Post</Link>
+            <Link to={`/posts/${post.id}/edit`}>Edit Post</Link>
             {" | "}
             <Link to="/">Back to Posts</Link>
             {" | "}
-            <button onClick={deletePost}>Delete Post</button>
+            <button onClick={deletePostHandler}>Delete Post</button>
         </div>
     );
 }
