@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from "react-router-dom";
 
 //TODO needs to create post list link
@@ -9,7 +8,7 @@ function NavBar() {
         <nav>
             <Link to="/">Posts List</Link>
             {" | "}
-            <Link to="posts/new">New Post</Link>
+            <Link to="posts/new">Create New Post</Link>
         </nav>
     );
 }
